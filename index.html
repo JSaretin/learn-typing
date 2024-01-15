@@ -56,9 +56,10 @@
 </head>
 
 <body class="bg-neutral-950 h-screen text-white"
-    x-data="{key: '', pressed: '', wrong: false, sec: 0, time: '0 seconds', trainKeys: localStorage.getItem('keys')||''}"
+    x-data="{key: '', pressed: '', isKid: Boolean((new URL(window.location.href)).searchParams.get('kid')), win: false, wrong: false, sec: 0, time: '0 seconds', trainKeys: localStorage.getItem('keys')||''}"
     @keydown="(e)=>{
     const pressedKey = e.key
+    win = false;
     if (pressedKey.length > 1) return key
     pressed = pressedKey
     const now = new Date().getTime();
@@ -72,46 +73,55 @@
         badSound.play();
         return
     }
+    win= true
+    setTimeout(()=>{
+        win = false
+    }, 1000)
     wrong=false
     key= generateKey(trainKeys, key)
   
 
 }">
-    <div class="w-full h-full flex justify-center align-middle place-items-center">
-        <template x-if="trainKeys.length == 0">
-            <div class="flex flex-col gap-4 justify-center align-middle place-items-center max-w-2xl w-full"
-                x-data="{keysToTrain:'0123456789abcdefghijklmnopqrstuvwxyz;,./'}">
-                <h2 class="text-3xl text-gray-600">Enter Keys To Train</h2>
-                <input x-model="keysToTrain" type="text"
-                    class="p-2 w-full rounded-2xl text-lg outline-none border-none text-gray-500 text-center font-bold bg-gray-800">
-                <button class="w-1/3 bg-green-500 p-2 rounded-2xl" x-on:click="()=>{
+    <div class="w-full h-full bg-contain bg-center" :class="{'bg-[url(\'/win.gif\')]': win && isKid}">
+        <div class="w-full h-full bg-black bg-opacity-70">
+            <div class="w-full h-full flex justify-center align-middle place-items-center">
+                <template x-if="trainKeys.length == 0">
+                    <div class="flex flex-col gap-4 justify-center align-middle place-items-center max-w-2xl w-full"
+                        x-data="{keysToTrain:'0123456789abcdefghijklmnopqrstuvwxyz;,./'}">
+                        <h2 class="text-3xl text-gray-600">Enter Keys To Train</h2>
+                        <input x-model="keysToTrain" type="text"
+                            class="p-2 w-full rounded-2xl text-lg outline-none border-none text-gray-500 text-center font-bold bg-gray-800">
+                        <button class="w-1/3 bg-green-500 p-2 rounded-2xl" x-on:click="()=>{
                     localStorage.setItem('keys', keysToTrain)
                     trainKeys = keysToTrain
                     
                 }">start training</button>
-            </div>
-        </template>
-        <template x-if="trainKeys.length > 0">
-            <div class="flex justify-center flex-col gap-8 relative" x-init="()=>{key=generateKey(trainKeys)}">
-                <h1 class="text-9xl text-white text-center" x-text="key"></h1>
-                <input disabled class="p-4 border-2 outline-none text-center flex bg-gray-900 w-[100px] rounded-2xl text-3xl "
-                    :class="wrong ? 'border-red-500 text-white': 'border-gray-700 text-gray-600'" x-model="pressed" />
-                <div class="flex flex-col gap-4">
+                    </div>
+                </template>
+                <template x-if="trainKeys.length > 0">
+                    <div class="flex justify-center flex-col gap-8 relative" x-init="()=>{key=generateKey(trainKeys)}">
+                        <h1 class="text-9xl text-white text-center" x-text="key"></h1>
+                        <input disabled
+                            class="p-4 border-2 outline-none text-center flex bg-gray-900 w-[100px] rounded-2xl text-3xl "
+                            :class="wrong ? 'border-red-500 text-white': 'border-gray-700 text-gray-600'"
+                            x-model="pressed" />
+                        <div class="flex flex-col gap-4">
 
-                    <p class="w-full whitespace-nowrap text-center text-green-400" x-text="time"></p>
+                            <p class="w-full whitespace-nowrap text-center text-green-400" x-text="time"></p>
 
-                    <button class="text-gray-700" x-on:click="()=>{
+                            <button class="text-gray-700" x-on:click="()=>{
                         delete localStorage['keys']
                         trainKeys = ''
                         pressed=''
                         key=''
                     }">change keys</button>
-                </div>
+                        </div>
+                    </div>
+                </template>
             </div>
-        </template>
+
+        </div>
     </div>
-
-
 </body>
 
 </html>
