@@ -37,8 +37,12 @@
             const number = Math.floor(Math.random() * keys.length);
             const key = keys[number];
             setTimeout(() => {
+                const audio = keysAudios[key.toUpperCase()]
+                if (audio=== undefined) return
                 try {
-                    keysAudios[key.toUpperCase()]?.play()
+                    audio.pause();
+                    audio.currentTime = 0
+                    audio.play();
                 }
                 catch (e) { }
             })
