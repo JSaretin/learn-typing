@@ -38,7 +38,7 @@
             const key = keys[number];
             setTimeout(() => {
                 const audio = keysAudios[key.toUpperCase()]
-                if (audio=== undefined) return
+                if (audio === undefined) return
                 try {
                     audio.pause();
                     audio.currentTime = 0
@@ -55,9 +55,29 @@
     </script>
 </head>
 
-<body class="bg-neutral-950 h-screen text-white">
-    <div class="w-full h-full flex justify-center align-middle place-items-center"
-        x-data="{key: '', pressed: '', wrong: false, sec: 0, time: '0 seconds', trainKeys: localStorage.getItem('keys')||''}">
+<body class="bg-neutral-950 h-screen text-white"
+    x-data="{key: '', pressed: '', wrong: false, sec: 0, time: '0 seconds', trainKeys: localStorage.getItem('keys')||''}"
+    @keydown="(e)=>{
+    const pressedKey = e.key
+    if (pressedKey.length > 1) return key
+    pressed = pressedKey
+    const now = new Date().getTime();
+    if (sec > 0){
+        const secondsElapsed = (now - sec) / 1000;
+        time = `${secondsElapsed} seconds`
+    }
+    sec = now
+    if (pressedKey != key) {
+        wrong=true
+        badSound.play();
+        return
+    }
+    wrong=false
+    key= generateKey(trainKeys, key)
+  
+
+}">
+    <div class="w-full h-full flex justify-center align-middle place-items-center">
         <template x-if="trainKeys.length == 0">
             <div class="flex flex-col gap-4 justify-center align-middle place-items-center max-w-2xl w-full"
                 x-data="{keysToTrain:'0123456789abcdefghijklmnopqrstuvwxyz;,./'}">
@@ -74,29 +94,8 @@
         <template x-if="trainKeys.length > 0">
             <div class="flex justify-center flex-col gap-8 relative" x-init="()=>{key=generateKey(trainKeys)}">
                 <h1 class="text-9xl text-white text-center" x-text="key"></h1>
-                <input class="p-4 border-2 outline-none text-center flex bg-gray-900 w-[100px] rounded-2xl text-3xl "
-                    :class="wrong ? 'border-red-500 text-white': 'border-gray-700 text-gray-600'" @keydown="(e)=>{
-                const pressedKey = e.key
-                pressed = ''
-                if (pressedKey.length > 1) return key
-                const now = new Date().getTime();
-                if (sec > 0){
-                    const secondsElapsed = (now - sec) / 1000;
-                    time = `${secondsElapsed} seconds`
-                }
-                sec = now
-                if (pressedKey != key) {
-                    wrong=true
-                    pressed = ''
-                    badSound.play();
-                    return
-                }
-                wrong=false
-                pressed = ''
-                key= generateKey(trainKeys, key)
-              
-
-        }" x-model="pressed" />
+                <input disabled class="p-4 border-2 outline-none text-center flex bg-gray-900 w-[100px] rounded-2xl text-3xl "
+                    :class="wrong ? 'border-red-500 text-white': 'border-gray-700 text-gray-600'" x-model="pressed" />
                 <div class="flex flex-col gap-4">
 
                     <p class="w-full whitespace-nowrap text-center text-green-400" x-text="time"></p>
