@@ -6,5 +6,5 @@ I have added the sound feedback on error key press as a kind of reinforcement le
 
 
 ### Contribution Notice
-This project is not some top CIA project, so anybody is free to clone and whatever with it and any suggestion is welcome since this is just a side project, I might be adding a way to type longer words. but if you feel like you'd like to contribute. Kindly fork the repo and push your PR. I'd be more than happy to marge it.
+This project is not some top CIA project, so anybody is free to clone and do whatever with it and any suggestion is welcome since this is just a side project, I might be adding a way to type longer words. but if you feel like you'd like to contribute. Kindly fork the repo and push your PR. I'd be more than happy to marge it.
 
