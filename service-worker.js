@@ -1,6 +1,6 @@
-
-const CACHE_NAME = "typin-v1";
+const CACHE_NAME = "typin-v2";
 const urlsToCache = [
+  "/",
   "/alphabet",
   "/alphabet/0.wav",
   "/alphabet/1.wav",
