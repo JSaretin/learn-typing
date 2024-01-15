@@ -1,4 +1,4 @@
-const CACHE_NAME = "typin-v2";
+const CACHE_NAME = "typin-v1";
 const urlsToCache = [
   "/",
   "/alphabet",
@@ -57,4 +57,3 @@ self.addEventListener("fetch", (event) => {
     })
   );
 });
-alphabet;
