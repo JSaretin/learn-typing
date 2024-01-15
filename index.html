@@ -11,24 +11,36 @@
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
-            .then((registration) => {
-                console.log('Service Worker registered with scope:', registration.scope);
-            })
-            .catch((error) => {
-                console.error('Service Worker registration failed:', error);
-            });
+                .then((registration) => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch((error) => {
+                    console.error('Service Worker registration failed:', error);
+                });
         }
     </script>
 
     <script>
         const badSound = new Audio('./bad.mp3')
+        const keysAudios = {}
+
+        const audioFileNames = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",]
+
+        for (const k of audioFileNames) {
+            try { keysAudios[k.toUpperCase()] = new Audio(`./alphabet/${k.toUpperCase()}.wav`) }
+            catch (e) { }
+        }
+
+
         function generateKey(keys) {
             keys = keys
             const number = Math.floor(Math.random() * keys.length);
             const key = keys[number];
-            setTimeout(()=>{
-                const a = new Audio(`./alphabet/${key.toUpperCase()}.wav`)
-                a.play();
+            setTimeout(() => {
+                try {
+                    keysAudios[key.toUpperCase()]?.play()
+                }
+                catch (e) { }
             })
             return key;
         }
@@ -43,13 +55,15 @@
     <div class="w-full h-full flex justify-center align-middle place-items-center"
         x-data="{key: '', pressed: '', wrong: false, sec: 0, time: '0 seconds', trainKeys: localStorage.getItem('keys')||''}">
         <template x-if="trainKeys.length == 0">
-            <div class="flex flex-col gap-4 justify-center align-middle place-items-center max-w-2xl w-full" x-data="{keysToTrain:'0123456789abcdefghijklmnopqrstuvwxyz;,./'}">
+            <div class="flex flex-col gap-4 justify-center align-middle place-items-center max-w-2xl w-full"
+                x-data="{keysToTrain:'0123456789abcdefghijklmnopqrstuvwxyz;,./'}">
                 <h2 class="text-3xl text-gray-600">Enter Keys To Train</h2>
                 <input x-model="keysToTrain" type="text"
                     class="p-2 w-full rounded-2xl text-lg outline-none border-none text-gray-500 text-center font-bold bg-gray-800">
                 <button class="w-1/3 bg-green-500 p-2 rounded-2xl" x-on:click="()=>{
                     localStorage.setItem('keys', keysToTrain)
                     trainKeys = keysToTrain
+                    
                 }">start training</button>
             </div>
         </template>
