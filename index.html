@@ -9,12 +9,15 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <script>
-        const goodSound = new Audio('./good.mp3')
         const badSound = new Audio('./bad.mp3')
         function generateKey(keys) {
             keys = keys
             const number = Math.floor(Math.random() * keys.length);
             const key = keys[number];
+            setTimeout(()=>{
+                const a = new Audio(`./alphabet/${key.toUpperCase()}.wav`)
+                a.play();
+            })
             return key;
         }
 
@@ -61,6 +64,7 @@
                 wrong=false
                 pressed = ''
                 key= generateKey(trainKeys, key)
+              
 
         }" x-model="pressed" />
                 <div class="flex flex-col gap-4">
